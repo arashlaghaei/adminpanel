@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Notification\Http\Controllers\NotificationController;
+use Modules\Notification\Http\Controllers\NotificationTemplateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,16 @@ Route::prefix('admin/notifications')->middleware(['web'])->name('admin.notificat
     Route::post('/{id}/retry', [NotificationController::class, 'retry'])->name('retry');
     Route::get('/{id}', [NotificationController::class, 'show'])->name('show');
     Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
+});
+
+// Notification template management
+Route::prefix('admin/notification-templates')->middleware(['web'])->name('admin.notification-templates.')->group(function () {
+    Route::get('/', [NotificationTemplateController::class, 'index'])->name('index');
+    Route::get('/create', [NotificationTemplateController::class, 'create'])->name('create');
+    Route::post('/', [NotificationTemplateController::class, 'store'])->name('store');
+    Route::get('/{notificationTemplate}/edit', [NotificationTemplateController::class, 'edit'])->name('edit');
+    Route::put('/{notificationTemplate}', [NotificationTemplateController::class, 'update'])->name('update');
+    Route::delete('/{notificationTemplate}', [NotificationTemplateController::class, 'destroy'])->name('destroy');
 });
 
 // User notification preferences routes
