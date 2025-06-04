@@ -37,6 +37,11 @@ class NotificationServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'database/migrations'));
+
+        // Register admin panel menu
+        if (class_exists(\Modules\Notification\Menus\NotificationMenu::class)) {
+            \Modules\Notification\Menus\NotificationMenu::register();
+        }
         
         // Register scheduled tasks
         $this->app->booted(function () {
