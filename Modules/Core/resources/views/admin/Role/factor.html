@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پیش فاکتور فروش</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f3f4f6; /* Tailwind gray-100 */
+        }
+        .invoice-container {
+            max-width: 52rem; /* Equivalent to max-w-2xl or a bit more for A4-like proportions */
+            margin: 2rem auto;
+            background-color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Tailwind shadow-lg */
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            overflow: hidden;
+        }
+        .invoice-header {
+            padding: 1.5rem; /* Tailwind p-6 */
+            border-bottom: 1px solid #d1d5db; /* Tailwind border-gray-300 */
+        }
+        .invoice-header .logo {
+            height: 4.5rem; /* Tailwind h-18, slightly reduced */
+            width: auto;
+            border-radius: 0.25rem; /* Tailwind rounded-sm */
+        }
+        .invoice-header .title {
+            font-size: 1.75rem; /* Tailwind text-2xl, slightly reduced */
+            font-weight: 700; /* Tailwind font-bold */
+            color: #1e40af; /* Tailwind blue-800 or similar sky */
+        }
+        .invoice-header .details p {
+            margin-bottom: 0.125rem; /* Tailwind mb-0.5, slightly reduced */
+            font-size: 0.8rem; /* Slightly reduced */
+        }
+
+        .info-section {
+            padding: 1rem 1.5rem; /* Reduced vertical padding */
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #9ca3af; /* Tailwind border-gray-400 */
+        }
+        .info-table th, .info-table td {
+            border: 1px solid #9ca3af; /* Tailwind border-gray-400 */
+            padding: 0.4rem 0.6rem; /* Reduced padding */
+            text-align: right;
+            font-size: 0.8rem; /* Slightly reduced */
+        }
+        .info-table th {
+            background-color: #f3f4f6; /* Tailwind gray-100 */
+            font-weight: 700; /* Tailwind font-bold */
+            color: #374151; /* Tailwind gray-700 */
+        }
+        .info-table .label {
+            font-weight: 600; /* Tailwind font-semibold */
+            color: #4b5563; /* Tailwind gray-600 */
+            white-space: nowrap;
+        }
+        .info-table .value {
+            color: #1f2937; /* Tailwind gray-800 */
+        }
+
+        .items-table-container {
+            padding: 0.5rem 1.5rem; /* Reduced vertical padding */
+        }
+        .items-table {
+            min-width: 100%;
+            border-collapse: collapse;
+        }
+        .items-table th, .items-table td {
+            border: 1px solid #d1d5db; /* Tailwind border-gray-300 */
+            padding: 0.5rem 0.75rem; /* Reduced padding */
+            text-align: right;
+            font-size: 0.8rem; /* Slightly reduced */
+        }
+        .items-table thead th {
+            background-color: #e5e7eb; /* Tailwind gray-200 */
+            font-weight: bold;
+        }
+
+        .totals-section {
+            padding: 1rem 1.5rem; /* Reduced vertical padding */
+        }
+        .totals-section .text-sm { font-size: 0.8rem; }
+        .totals-section .text-xs { font-size: 0.75rem; }
+        .totals-section .text-md { font-size: 0.9rem; }
+        .totals-section .text-lg { font-size: 1rem; }
+
+
+        .invoice-footer {
+            padding: 1rem 1.5rem; /* Reduced vertical padding */
+            border-top: 1px solid #d1d5db; /* Tailwind border-gray-300 */
+            background-color: #f9fafb; /* Tailwind gray-50 */
+            font-size: 0.8rem; /* Slightly reduced */
+        }
+        .invoice-footer .text-xs { font-size: 0.75rem; }
+
+        .print-button-container {
+            max-width: 52rem; /* Match invoice-container width */
+            margin: 1.5rem auto; /* Adjusted margin */
+            text-align: center;
+        }
+        .print-button {
+            background-color: #22c55e; /* Tailwind green-500 */
+            color: white;
+            font-weight: bold;
+            padding: 0.5rem 1.5rem; /* Tailwind py-2 px-6 */
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Tailwind shadow-md */
+            transition: background-color 0.15s ease-in-out;
+            font-size: 0.875rem; /* Tailwind text-sm */
+        }
+        .print-button:hover {
+            background-color: #16a34a; /* Tailwind green-600 */
+        }
+
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: white;
+                margin: 0;
+                padding: 0;
+                font-size: 10pt; /* Base font size for print */
+            }
+            .invoice-container {
+                max-width: 100%;
+                margin: 0;
+                box-shadow: none;
+                border-radius: 0;
+                border: none;
+                overflow: visible;
+            }
+            .invoice-header, .info-section, .items-table-container, .totals-section, .invoice-footer {
+                padding: 0.5cm 0.8cm; /* Adjust padding for print, using cm for better print control */
+            }
+            .invoice-header .logo { height: 4rem; }
+            .invoice-header .title { font-size: 16pt; }
+            .invoice-header .details p { font-size: 9pt; margin-bottom: 0.05cm;}
+
+            .info-table th, .info-table td { padding: 0.2cm 0.3cm; font-size: 9pt;}
+            .items-table th, .items-table td { padding: 0.25cm 0.35cm; font-size: 9pt;}
+
+            .totals-section .text-sm,
+            .totals-section .text-xs,
+            .totals-section .text-md,
+            .totals-section .text-lg {
+                font-size: 9pt !important; /* Override screen styles for print */
+            }
+            .totals-section .font-semibold { font-weight: 600 !important; }
+            .totals-section .font-bold { font-weight: 700 !important; }
+
+
+            .invoice-footer p, .invoice-footer h3, .invoice-footer strong {
+                font-size: 8pt !important;
+            }
+            .invoice-footer {
+                padding-top: 0.5cm;
+                margin-top: 0.5cm;
+                background-color: white !important; /* Ensure no background color in print */
+            }
+
+            .print-button-container {
+                display: none; /* Hide the print button in print view */
+            }
+            /* Attempt to avoid page breaks inside these elements */
+            .info-table, .items-table, .totals-section, .invoice-footer {
+                page-break-inside: avoid;
+            }
+            thead { display: table-header-group; } /* Ensure table headers repeat on each page if table breaks */
+            tbody { display: table-row-group; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+        }
+    </style>
+</head>
+<body>
+<div class="invoice-container">
+    <header class="invoice-header">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <img src="https://amajholding.ir/wp-content/uploads/2022/08/Untitled-29-150x150.jpg" alt="لوگوی شرکت ایده پردازان آماج" class="logo">
+            </div>
+            <div class="text-left"> <p>شماره: <span class="font-semibold">PI-2024-00789</span></p>
+                <p>تاریخ: <span class="font-semibold">1403/03/11</span></p>
+                <p class="mt-1">تاریخ اعتبار: <span class="font-semibold">1403/04/11</span></p>
+            </div>
+        </div>
+        <div class="text-center">
+            <h1 class="title">پیش فاکتور فروش</h1>
+        </div>
+    </header>
+
+    <section class="info-section">
+        <table class="info-table">
+            <thead>
+            <tr>
+                <th colspan="4">مشخصات فروشنده</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="label">شخص حقیقی/حقوقی:</td>
+                <td class="value" colspan="3">ایده پردازان آماج منطقه آزاد انزلی</td>
+            </tr>
+            <tr>
+                <td class="label">نشانی:</td>
+                <td class="value" colspan="3">منطقه آزاد انزلی، بلوار فاتحی، پلاک ۱۹</td>
+            </tr>
+            <tr>
+                <td class="label">شماره اقتصادی:</td>
+                <td class="value">411323548151</td>
+                <td class="label">شماره ثبت:</td>
+                <td class="value">3246</td>
+            </tr>
+            <tr>
+                <td class="label">شناسه ملی:</td>
+                <td class="value">14006604333</td>
+                <td class="label">کد پستی:</td>
+                <td class="value">4333157014</td>
+            </tr>
+            <tr>
+                <td class="label">تلفن:</td>
+                <td class="value">021-88791468</td>
+                <td class="label">فاکس:</td>
+                <td class="value">013-44405355</td>
+            </tr>
+            </tbody>
+            <thead>
+            <tr>
+                <th colspan="4">مشخصات خریدار</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="label">نام شخص حقیقی/حقوقی:</td>
+                <td class="value" colspan="3">مرکز آموزش و تحقیقات حسابداران رسمی</td>
+            </tr>
+            <tr>
+                <td class="label">نشانی کامل:</td>
+                <td class="value" colspan="3">تهران، خیابان میرداماد، خیابان شهید حصاری، بن بست ۱۶، پلاک ۳</td>
+            </tr>
+            <tr>
+                <td class="label">شناسه ملی:</td>
+                <td class="value">14010795296</td>
+                <td class="label">کد پستی:</td>
+                <td class="value">1547713651</td>
+            </tr>
+            <tr>
+                <td class="label">شماره تماس:</td>
+                <td class="value">021-71132000</td>
+                <td class="label">استان:</td>
+                <td class="value">تهران</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="items-table-container">
+        <table class="items-table">
+            <thead>
+            <tr>
+                <th>ردیف</th>
+                <th class="w-2/5">شرح کالا / خدمات</th>
+                <th class="text-center">تعداد/مقدار</th>
+                <th class="text-left">قیمت واحد (ریال)</th>
+                <th class="text-left">مبلغ کل (ریال)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>سیستم مدیریت آموزشی</td>
+                <td class="text-center">1</td>
+                <td class="text-left">6,200,000,000</td>
+                <td class="text-left">6,200,000,000</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="totals-section">
+        <div class="flex justify-end">
+            <div class="w-full md:w-2/3 lg:w-1/2 space-y-2"> <div class="flex justify-between">
+                <span class="text-gray-600 text-sm">جمع کل (ریال):</span>
+                <span class="font-semibold text-gray-800 text-sm">6,200,000,000</span>
+            </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600 text-sm">تخفیف (ریال):</span>
+                    <span class="font-semibold text-gray-800 text-sm">0</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600 text-sm">مالیات بر ارزش افزوده (10%) (ریال):</span>
+                    <span class="font-semibold text-gray-800 text-sm">620,000,000</span>
+                </div>
+                <hr class="my-1 border-gray-300"> <div class="flex justify-between">
+                    <span class="text-md font-bold text-gray-800">مبلغ قابل پرداخت (ریال):</span>
+                    <span class="text-lg font-bold text-sky-600">6,820,000,000</span>
+                </div>
+                <div class="flex justify-between mt-0.5"> <span class="text-xs text-gray-500">مبلغ به حروف:</span>
+                    <span class="text-xs font-semibold text-gray-700">شش میلیارد و هشتصد و بیست میلیون ریال</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<div class="print-button-container">
+    <button onclick="window.print()" class="print-button">
+        چاپ پیش فاکتور
+    </button>
+</div>
+</body>
+</html>

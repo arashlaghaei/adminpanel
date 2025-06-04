@@ -1,0 +1,36 @@
+{
+    "name": "nwidart/core",
+    "description": "",
+    "authors": [
+        {
+            "name": "Arash laghaei",
+            "email": "arashlaghaei@gmail.com"
+        }
+    ],
+    "require": {
+        "morilog/jalali": "*"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Core\\": "app/",
+            "Modules\\Core\\Database\\Factories\\": "database/factories/",
+            "Modules\\Core\\Database\\Seeders\\": "database/seeders/"
+        },
+        "files": [
+            "app/Libraries/Helpers/all.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Core\\Tests\\": "tests/"
+        }
+    }
+}
