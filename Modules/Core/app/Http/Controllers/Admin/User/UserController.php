@@ -24,12 +24,12 @@ class UserController extends Controller
         $data['userChartMonth'] = $userStats->getLastMonthRecords();
         $data['userChartYear'] = $userStats->getLastYearRecords();
 
-        return view('core::admin.user.user.index',$data);
+        return view('core::admin.User.user.index', $data);
     }
 
     public function create( )
     {
-        return view('core::admin.user.user.create');
+        return view('core::admin.User.user.create');
     }
 
     public function store(UserRequest $request)
@@ -50,7 +50,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return view('core::admin.user.user.edit',compact('user'));
+        return view('core::admin.User.user.edit', compact('user'));
     }
 
     public function update(UserRequest $request, User $user)

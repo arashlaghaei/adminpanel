@@ -34,7 +34,7 @@ class RoleController extends Controller
     {
         $permissions = Permission::all();
 
-        return view('core::admin.role.create', compact('permissions'));
+        return view('core::admin.Role.create', compact('permissions'));
     }
 
     public function store(Request $request)
