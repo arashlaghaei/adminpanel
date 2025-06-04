@@ -3,9 +3,11 @@
 namespace Modules\Notification\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Core\Libraries\Traits\Scopes;
 
 class NotificationTemplate extends Model
 {
+    use Scopes;
     protected $table = 'notification_templates';
     
     protected $fillable = [
