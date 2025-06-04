@@ -8,10 +8,15 @@ use Modules\Notification\Models\NotificationTemplate;
 
 class NotificationTemplateController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $templates = NotificationTemplate::paginate(10);
-        return view('notification::admin.templates.index', compact('templates'));
+        if ($request->has('page')) {
+            $per_page = $request->input('per_page', 10);
+            $list = NotificationTemplate::search()->paginate($per_page);
+            return response()->json($list);
+        }
+
+        return view('notification::admin.templates.index');
     }
 
     public function create()
