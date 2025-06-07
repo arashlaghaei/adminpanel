@@ -8,6 +8,20 @@
             <form class="form" method="post" action="{{ route('admin.notification-templates.store') }}">
                 @csrf
                 <div class="card card-flush py-4">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h2>ایجاد قالب اعلان</h2>
+                        </div>
+                        <div class="card-toolbar">
+                            <a href="{{ route('admin.notification-templates.index') }}" class="btn btn-light-primary">
+                                <i class="ki-duotone ki-arrow-left fs-2">
+                                    <span class="path1"></span>
+                                    <span class="path2"></span>
+                                </i>
+                                بازگشت به لیست
+                            </a>
+                        </div>
+                    </div>
                     <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-md-6 mb-7">
@@ -19,23 +33,57 @@
                             <div class="col-md-6 mb-7">
                                 <x-core::form.input name="notification_type" title="نوع" required="true" />
                             </div>
-                            <div class="col-md-6 mb-7">
-                                <label class="required form-label">کانال‌ها</label>
-                                <select name="channels[]" class="form-select" data-control="select2" data-placeholder="انتخاب کنید" multiple required>
-                                    <option value="database">database</option>
-                                    <option value="mail">mail</option>
-                                    <option value="sms">sms</option>
-                                    <option value="whatsapp">whatsapp</option>
-                                    <option value="telegram">telegram</option>
-                                </select>
+                            <div class="col-12 mb-7">
+                                <label class="required form-label mb-2">کانال‌ها</label>
+                                @php($channels = array_keys(array_filter(config('notification.channels'))))
+                                <div class="card bg-light">
+                                    <div class="card-body py-3">
+                                        <div class="row">
+                                            @foreach($channels as $channel)
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-check form-check-custom form-check-solid me-10">
+                                                        <input class="form-check-input h-20px w-20px" type="checkbox" name="channels[]" value="{{ $channel }}" {{ in_array($channel, old('channels', ['database'])) ? 'checked' : '' }}>
+                                                        <span class="form-check-label fw-semibold">
+                                                            @switch($channel)
+                                                                @case('database')
+                                                                    اعلان داخلی
+                                                                    @break
+                                                                @case('mail')
+                                                                    ایمیل
+                                                                    @break
+                                                                @case('sms')
+                                                                    پیامک
+                                                                    @break
+                                                                @case('whatsapp')
+                                                                    واتس‌اپ
+                                                                    @break
+                                                                @case('telegram')
+                                                                    تلگرام
+                                                                    @break
+                                                                @case('slack')
+                                                                    اسلک
+                                                                    @break
+                                                                @case('discord')
+                                                                    دیسکورد
+                                                                    @break
+                                                                @default
+                                                                    {{ $channel }}
+                                                            @endswitch
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-12 mb-7">
                                 <label class="form-label">محتوا (JSON)</label>
-                                <textarea name="content" class="form-control" rows="4">{{ old('content') }}</textarea>
+                                <textarea name="content" class="form-control font-monospace" rows="4" placeholder="{\n    \"title\": \"...\"\n}">{{ old('content') }}</textarea>
                             </div>
                             <div class="col-12 mb-7">
                                 <label class="form-label">عملیات (JSON)</label>
-                                <textarea name="actions" class="form-control" rows="4">{{ old('actions') }}</textarea>
+                                <textarea name="actions" class="form-control font-monospace" rows="4" placeholder="[]">{{ old('actions') }}</textarea>
                             </div>
                             <div class="col-12">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
